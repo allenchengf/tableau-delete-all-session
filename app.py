@@ -80,13 +80,18 @@ def main():
                     remove = WebDriverWait(button, 10).until(EC.element_to_be_clickable(
                         (By.XPATH, '//*[@id="react-confirm-action-dialog-Dialog-Body-Id"]/div[2]/span/button')))
                     remove.click()
-                    logging_message("  remove session" + i)
+                    logging_message("  remove session")
 
                     time.sleep(10)
+            logging_message("  Done")
         else:
             logging_message("  No items found")
 
     except requests.exceptions.RequestException as e:
+        logging_message(e)
+        print(e)
+        pass
+    except Exception as e:
         logging_message(e)
         print(e)
         pass
