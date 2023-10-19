@@ -91,11 +91,8 @@ def main():
         logging_message(e)
         print(e)
         pass
-    except Exception as e:
-        logging_message(e)
-        print(e)
-        pass
     except TimeoutException as e:
+        logging_message("  No items found")
         logging_message("  Timeout")
         logging_message(e)
         print(e)
