@@ -375,6 +375,16 @@ files = [
 ]
 
 [[package]]
+name = "pyinstall"
+version = "0.1.4"
+description = "Installer for Python packages"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pyinstall-0.1.4.tar.gz", hash = "sha256:bb2407a3664ce25454f7e4a93763198f3a6a43c0cc727e33a06c0ce18324cd15"},
+]
+
+[[package]]
 name = "pysocks"
 version = "1.7.1"
 description = "A Python SOCKS client module. See https://github.com/Anorov/PySocks for more information."
@@ -560,4 +570,4 @@ h11 = ">=0.9.0,<1"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "a49788a066557c83c3301ac8db88027ddb48a608b0c908dab02fff5afcc353fe"
+content-hash = "9491de21390b2cc3a20b0e6741bbb78f68df063704f2389ff30e817d7ad5ef45"

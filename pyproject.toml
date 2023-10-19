@@ -12,6 +12,7 @@ beautifulsoup4 = "^4.12.2"
 webdriver-manager = "^4.0.1"
 lxml = "4.9.2"
 requests = "^2.31.0"
+pyinstall = "^0.1.4"
 
 
 [build-system]
