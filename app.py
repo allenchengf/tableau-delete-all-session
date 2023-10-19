@@ -20,9 +20,9 @@ def main():
     correct_path = get_path_by_os()
     current_directory = os.getcwd() + correct_path + "temp"
     chrome_options = Options()
-    # chrome_options.add_argument('--headless=new')
-    # chrome_options.add_argument('--no-sandbox')
-    # chrome_options.add_argument('--disable-extensions')
+    chrome_options.add_argument('--headless=new')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-extensions')
     prefs = {"download.default_directory": current_directory}
     chrome_options.add_experimental_option('prefs', {'intl.accept_languages': 'en,en_US'})
     chrome_options.add_experimental_option("prefs", prefs)
