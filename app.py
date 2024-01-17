@@ -20,8 +20,11 @@ def main():
     correct_path = get_path_by_os()
     current_directory = os.getcwd() + correct_path + "temp"
     chrome_options = Options()
+
+    # 不需開啟瀏覽器
     chrome_options.add_argument('--headless=new')
     chrome_options.add_argument('--no-sandbox')
+
     chrome_options.add_argument('--disable-extensions')
     prefs = {"download.default_directory": current_directory}
     chrome_options.add_experimental_option('prefs', {'intl.accept_languages': 'en,en_US'})
@@ -49,10 +52,10 @@ def main():
         logging_message("  Login Success")
     except requests.exceptions.RequestException as e:
         logging_message(e)
-        print(e)
+        # print(e)
 
     user_content = driver.find_element(By.XPATH,
-                                       '//*[@id="app-root"]/div/div[1]/div/div[2]/div/div/div[1]/span[2]/div/div[7]/div/button')
+                                       '//*[@id="app-root"]/div/div[1]/div/div/div/div[2]/div[1]/div/div[2]/div[4]/div/button')
     driver.execute_script("arguments[0].click();", user_content)
 
     setting = driver.find_element(By.XPATH, '//*[@id="app-root"]/div[2]/div/div/div/div[3]/div')
@@ -89,13 +92,13 @@ def main():
 
     except requests.exceptions.RequestException as e:
         logging_message(e)
-        print(e)
+        # print(e)
         pass
     except TimeoutException as e:
         logging_message("  No items found")
         logging_message("  Timeout")
         logging_message(e)
-        print(e)
+        # print(e)
         pass
 
     driver.close()
@@ -110,7 +113,7 @@ def get_path_by_os():
 
 
 def logging_message(message):
-    print(message)
+    # print(message)
     logging.basicConfig(level=logging.INFO, filename='accesslog ' + time.strftime('%Y%m%d_%H_%M_%S') + '.log',
                         filemode='a', format='%(asctime)s %(levelname)s: %(message)s')
     logging.info(message)
