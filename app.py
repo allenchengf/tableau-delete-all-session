@@ -1,5 +1,4 @@
 from selenium import webdriver
-import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.options import Options
@@ -7,8 +6,11 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
-import lxml
-from bs4 import BeautifulSoup
+
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import smtplib
+
 import os, stat
 import requests
 import time
@@ -22,8 +24,8 @@ def main():
     chrome_options = Options()
 
     # 不需開啟瀏覽器
-    chrome_options.add_argument('--headless=new')
-    chrome_options.add_argument('--no-sandbox')
+    # chrome_options.add_argument('--headless=new')
+    # chrome_options.add_argument('--no-sandbox')
 
     chrome_options.add_argument('--disable-extensions')
     prefs = {"download.default_directory": current_directory}
@@ -46,20 +48,29 @@ def main():
 
     try:
         logging_message("  " + os.environ['ACCOUNT'] + " login")
-        driver.find_element('name', 'username').send_keys(os.environ['ACCOUNT'])
-        driver.find_element('name', 'password').send_keys(os.environ['PASSWORD'])
+        # driver.find_element('name', 'username').send_keys(os.environ['ACCOUNT'])
+        # driver.find_element('name', 'password').send_keys(os.environ['PASSWORD'])
+        driver.find_element('name', 'username').send_keys("Administrator")
+        driver.find_element('name', 'password').send_keys("!qazxsw23edc")
         driver.find_element(By.XPATH, '//*[@id="app-root"]/div/div[1]/div[2]/div/span/form/button').click()
         logging_message("  Login Success")
     except requests.exceptions.RequestException as e:
         logging_message(e)
-        # print(e)
+        send_error_email()
 
-    user_content = driver.find_element(By.XPATH,
-                                       '//*[@id="app-root"]/div/div[1]/div/div/div/div[2]/div[1]/div/div[2]/div[4]/div/button')
-    driver.execute_script("arguments[0].click();", user_content)
+    try:
+        # user_content = driver.find_element(By.XPATH,
+        #                                    '//*[@id="app-root"]/div/div[1]/div/div/div/div[2]/div[1]/div/div[2]/div[4]/div/button')
+        user_content = driver.find_element(By.XPATH,
+                                           '//*[@id="app-root"]/div/div[1]/div/div/div/div[2]/div[1]/div/div[2]/div[4]/div/button')
+        driver.execute_script("arguments[0].click();", user_content)
 
-    setting = driver.find_element(By.XPATH, '//*[@id="app-root"]/div[2]/div/div/div/div[3]/div')
-    driver.execute_script("arguments[0].click();", setting)
+        # setting = driver.find_element(By.XPATH, '//*[@id="app-root"]/div[2]/div/div/div/div[3]/div')
+        setting = driver.find_element(By.XPATH, '//*[@id="app-root"]/div[2]/div/div/div/div[2]')
+        driver.execute_script("arguments[0].click();", setting)
+    except requests.exceptions.RequestException as e:
+        logging_message(e)
+        send_error_email()
 
     try:
         table = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH,
@@ -92,13 +103,12 @@ def main():
 
     except requests.exceptions.RequestException as e:
         logging_message(e)
-        # print(e)
+        send_error_email()
         pass
     except TimeoutException as e:
         logging_message("  No items found")
         logging_message("  Timeout")
         logging_message(e)
-        # print(e)
         pass
 
     driver.close()
@@ -117,6 +127,24 @@ def logging_message(message):
     logging.basicConfig(level=logging.INFO, filename='accesslog ' + time.strftime('%Y%m%d_%H_%M_%S') + '.log',
                         filemode='a', format='%(asctime)s %(levelname)s: %(message)s')
     logging.info(message)
+
+
+def send_error_email():
+    content = MIMEMultipart()
+    content["subject"] = "elifemall test"
+    content["from"] = "allen.chen@elifemall.com.tw"
+    content["to"] = "allen.chen@elifemall.com.tw"
+    content.attach(MIMEText("Tableau delete all session program execution error."))
+
+    with smtplib.SMTP(host="smtp.gmail.com", port="587") as smtp:  # 設定SMTP伺服器
+        try:
+            smtp.ehlo()  # 驗證SMTP伺服器
+            smtp.starttls()  # 建立加密傳輸
+            smtp.login("allen.chen@elifemall.com.tw", "xfxvvbjmdltkjatt")  # 登入寄件者gmail
+            smtp.send_message(content)  # 寄送郵件
+            print("Send Error Notification to " + content["to"])
+        except Exception as e:
+            print("Error message: ", e)
 
 
 if __name__ == '__main__':
