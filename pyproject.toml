@@ -9,10 +9,10 @@ readme = "README.md"
 python = ">=3.10 <3.13"
 selenium = "^4.11.2"
 beautifulsoup4 = "^4.12.2"
-webdriver-manager = "^4.0.0"
 requests = "^2.31.0"
 lxml = "4.9.2"
 pyinstaller = "^5.13.2"
+webdriver-manager = "^4.0.2"
 
 
 [build-system]
