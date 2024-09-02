@@ -18,6 +18,7 @@ logging.basicConfig(level=logging.INFO, filename='process_log ' + time.strftime(
                     filemode='a', format='%(asctime)s %(levelname)s: %(message)s')
 
 WEBHOOK_URLS = [
+    'https://chat.googleapis.com/v1/spaces/5vKvMsAAAAE/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=usxl1czCTAJdH9u-i7d3NRtr3W-2H5-koyTl_Qd4Lt0',
     'https://chat.googleapis.com/v1/spaces/lyoq0MAAAAE/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=k7M0GP9w6lgpp6pjFSZ4mLM_ksnELXJV_KD77iX11PI',
     'https://chat.googleapis.com/v1/spaces/AAAAYLN0FHc/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=Hz7Zuahhs8aMSRXHoO6NjnqjykycErz3Z7hQvCfqqZk'
 ]
