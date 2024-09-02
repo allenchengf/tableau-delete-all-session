@@ -18,9 +18,9 @@ logging.basicConfig(level=logging.INFO, filename='process_log ' + time.strftime(
                     filemode='a', format='%(asctime)s %(levelname)s: %(message)s')
 
 WEBHOOK_URLS = [
-    os.environ["WEBHOOK_URL1"],
-    os.environ["WEBHOOK_URL2"],
-    os.environ["WEBHOOK_URL3"]
+    'https://chat.googleapis.com/v1/spaces/5vKvMsAAAAE/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=usxl1czCTAJdH9u-i7d3NRtr3W-2H5-koyTl_Qd4Lt0',
+    'https://chat.googleapis.com/v1/spaces/lyoq0MAAAAE/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=k7M0GP9w6lgpp6pjFSZ4mLM_ksnELXJV_KD77iX11PI',
+    'https://chat.googleapis.com/v1/spaces/AAAAYLN0FHc/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=Hz7Zuahhs8aMSRXHoO6NjnqjykycErz3Z7hQvCfqqZk'
 ]
 
 
@@ -53,7 +53,6 @@ def main():
     # original_window = driver.current_window_handle
 
     try:
-        logging_message("  " + os.environ['ACCOUNT'] + " login")
         # driver.find_element('name', 'username').send_keys(os.environ['ACCOUNT'])
         # driver.find_element('name', 'password').send_keys(os.environ['PASSWORD'])
         driver.find_element('name', 'username').send_keys("Administrator")
