@@ -30,8 +30,8 @@ def main():
     chrome_options = Options()
 
     # 不需開啟瀏覽器
-    # chrome_options.add_argument('--headless=new')
-    # chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--headless=new')
+    chrome_options.add_argument('--no-sandbox')
 
     chrome_options.add_argument('--disable-extensions')
     prefs = {"download.default_directory": current_directory}
