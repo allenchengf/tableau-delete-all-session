@@ -6,19 +6,23 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
-
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-import smtplib
-
-import os, stat
 import requests
+from requests.models import Response
+import os, stat
 import time
 import logging
 import platform
+import json
 
 logging.basicConfig(level=logging.INFO, filename='process_log ' + time.strftime('%Y%m%d_%H_%M_%S') + '.log',
                     filemode='a', format='%(asctime)s %(levelname)s: %(message)s')
+
+WEBHOOK_URLS = [
+    os.environ["WEBHOOK_URL1"],
+    os.environ["WEBHOOK_URL2"],
+    os.environ["WEBHOOK_URL3"]
+]
+
 
 def main():
     correct_path = get_path_by_os()
@@ -57,7 +61,9 @@ def main():
         driver.find_element(By.XPATH, '//*[@id="app-root"]/div/div[1]/div[2]/div/span/form/button').click()
         logging_message("  Login Success")
     except Exception as e:
-        logging.error("An error occurred", exc_info=True)
+        error_message = f"An error occurred: {str(e)}"
+        send_to_google_chat(error_message)
+        logging.error(error_message, exc_info=True)
 
     try:
         # user_content = driver.find_element(By.XPATH,
@@ -70,7 +76,9 @@ def main():
         setting = driver.find_element(By.XPATH, '//*[@id="app-root"]/div[2]/div/div/div/div[2]')
         driver.execute_script("arguments[0].click();", setting)
     except Exception as e:
-        logging.error("An error occurred", exc_info=True)
+        error_message = f"An error occurred: {str(e)}"
+        send_to_google_chat(error_message)
+        logging.error(error_message, exc_info=True)
 
     try:
         table = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH,
@@ -107,10 +115,25 @@ def main():
         logging_message(e)
         pass
     except Exception as e:
-        logging.error("An error occurred", exc_info=True)
+        error_message = f"An error occurred: {str(e)}"
+        send_to_google_chat(error_message)
+        logging.error(error_message, exc_info=True)
         pass
 
     driver.close()
+
+
+def send_to_google_chat(message):
+    headers = {
+        'Content-Type': 'application/json; charset=UTF-8'
+    }
+    payload = {
+        'text': message
+    }
+    for webhook_url in WEBHOOK_URLS:
+        response = requests.post(webhook_url, headers=headers, data=json.dumps(payload))
+        if response.status_code != 200:
+            logging.error(f'Failed to send message to Google Chat: {response.status_code}, {response.text}')
 
 
 def get_path_by_os():
