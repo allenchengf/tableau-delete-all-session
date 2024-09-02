@@ -17,6 +17,8 @@ import time
 import logging
 import platform
 
+logging.basicConfig(level=logging.INFO, filename='process_log ' + time.strftime('%Y%m%d_%H_%M_%S') + '.log',
+                    filemode='a', format='%(asctime)s %(levelname)s: %(message)s')
 
 def main():
     correct_path = get_path_by_os()
@@ -54,9 +56,8 @@ def main():
         driver.find_element('name', 'password').send_keys("!qazxsw23edc")
         driver.find_element(By.XPATH, '//*[@id="app-root"]/div/div[1]/div[2]/div/span/form/button').click()
         logging_message("  Login Success")
-    except requests.exceptions.RequestException as e:
-        logging_message(e)
-        send_error_email()
+    except Exception as e:
+        logging.error("An error occurred", exc_info=True)
 
     try:
         # user_content = driver.find_element(By.XPATH,
@@ -68,9 +69,8 @@ def main():
         # setting = driver.find_element(By.XPATH, '//*[@id="app-root"]/div[2]/div/div/div/div[3]/div')
         setting = driver.find_element(By.XPATH, '//*[@id="app-root"]/div[2]/div/div/div/div[2]')
         driver.execute_script("arguments[0].click();", setting)
-    except requests.exceptions.RequestException as e:
-        logging_message(e)
-        send_error_email()
+    except Exception as e:
+        logging.error("An error occurred", exc_info=True)
 
     try:
         table = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH,
@@ -101,14 +101,13 @@ def main():
         else:
             logging_message("  No items found")
 
-    except requests.exceptions.RequestException as e:
-        logging_message(e)
-        send_error_email()
-        pass
     except TimeoutException as e:
         logging_message("  No items found")
         logging_message("  Timeout")
         logging_message(e)
+        pass
+    except Exception as e:
+        logging.error("An error occurred", exc_info=True)
         pass
 
     driver.close()
@@ -124,27 +123,7 @@ def get_path_by_os():
 
 def logging_message(message):
     # print(message)
-    logging.basicConfig(level=logging.INFO, filename='accesslog ' + time.strftime('%Y%m%d_%H_%M_%S') + '.log',
-                        filemode='a', format='%(asctime)s %(levelname)s: %(message)s')
     logging.info(message)
-
-
-def send_error_email():
-    content = MIMEMultipart()
-    content["subject"] = "elifemall test"
-    content["from"] = "allen.chen@elifemall.com.tw"
-    content["to"] = "allen.chen@elifemall.com.tw"
-    content.attach(MIMEText("Tableau delete all session program execution error."))
-
-    with smtplib.SMTP(host="smtp.gmail.com", port="587") as smtp:  # 設定SMTP伺服器
-        try:
-            smtp.ehlo()  # 驗證SMTP伺服器
-            smtp.starttls()  # 建立加密傳輸
-            smtp.login("allen.chen@elifemall.com.tw", "xfxvvbjmdltkjatt")  # 登入寄件者gmail
-            smtp.send_message(content)  # 寄送郵件
-            print("Send Error Notification to " + content["to"])
-        except Exception as e:
-            print("Error message: ", e)
 
 
 if __name__ == '__main__':
